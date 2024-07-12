@@ -86,29 +86,6 @@ services:
     labels:
       org.label-schema.group: "monitoring"
 
-  loki:
-    image: grafana/loki:3.0.0
-    container_name: loki
-    ports:
-      - "3100:3100"
-    volumes:
-      - ./loki/loki-local-config.yaml:/etc/loki/local-config.yaml
-    command: -config.file=/etc/loki/local-config.yaml
-    networks:
-      - monitor-net
-
-  promtail:
-    image: grafana/promtail:3.0.0
-    container_name: promtail
-    volumes:
-      - /var/log:/var/log
-      - ./loki/promtail-ubuntu-logs-configs.yaml:/etc/promtail/config.yml
-    command: -config.file=/etc/promtail/config.yml
-    ports:
-      - "9080:9080"
-    networks:
-      - monitor-net
-
   grafana:
     image: grafana/grafana:6.7.2
     container_name: grafana

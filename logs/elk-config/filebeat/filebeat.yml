@@ -1,0 +1,40 @@
+filebeat.modules:
+  - module: system
+    syslog:
+      enabled: true
+      var.paths: ["/var/log/syslog*"]
+  - module: system
+    auth:
+      enabled: true
+      var.paths: ["/var/log/auth.log*"]
+filebeat.inputs:
+  - type: container
+    paths:
+      - '/var/lib/docker/containers/*/*.log'
+processors:
+  - add_docker_metadata:
+      host: "unix:///var/run/docker.sock"
+  - decode_json_fields:
+      fields: ["log", "message"]
+      target: ""
+      overwrite_keys: true
+  - drop_event:
+      when:
+        equals:
+          container.name: "filebeat"
+
+filebeat.config.modules:
+  path: ${path.config}/modules.d/*.yml
+  reload.enabled: false
+
+output.elasticsearch:
+  hosts: "http://elasticsearch:9200"
+setup.kibana:
+  host: "http://kibana:5601"
+
+logging.to_files: false
+logging.to_syslog: false
+loggins.metrice.enabled: false
+json.keys_under_root: true
+json.add_error_key: true
+json.message_key: log

@@ -1,0 +1,9 @@
+services:
+  wetty:
+    image: wettyoss/wetty
+    container_name: web-ssh
+    command:
+      - '--ssh-host=172.17.0.1'
+    restart: unless-stopped
+    ports:
+      - "34567:3000"

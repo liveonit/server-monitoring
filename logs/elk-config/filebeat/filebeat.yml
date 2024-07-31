@@ -17,12 +17,9 @@ processors:
   - decode_json_fields:
       fields: ["log", "message"]
       target: ""
+      max_depth: 2
+      # overwrite existing target elasticsearch fields while decoding json fields
       overwrite_keys: true
-  - drop_event:
-      when:
-        equals:
-          container.name: "filebeat"
-
 filebeat.config.modules:
   path: ${path.config}/modules.d/*.yml
   reload.enabled: false
